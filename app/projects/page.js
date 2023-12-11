@@ -31,7 +31,7 @@ export default function Projects() {
     <>
       <AnimatePresence mode="wait">
         <motion.main
-          className="mx-auto flex min-h-screen items-center justify-center bg-neutral-900 text-white"
+          className="mx-auto flex min-h-screen items-center justify-center text-white"
           {...fadeInAnimation}
         >
           <motion.div className="page-content" {...fadeInAnimation}>
