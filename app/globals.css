@@ -1,27 +1,67 @@
+@import url("https://fonts.googleapis.com/css2?family=Kaisei+Decol&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+.font-kaisei {
+  font-family: "Kaisei Decol", serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+html {
+  background-color: #000;
+}
+
+::selection {
+  background-color: #000;
+  color: #ffffff;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px #212326 inset;
+  -webkit-text-fill-color: #ceced4;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+  background: #000;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.147);
+  border-radius: 20px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.147);
+}
+
+::-webkit-scrollbar-thumb:active {
+  background: rgba(255, 255, 255, 0.147);
+}
+
+.swiper {
+  padding-bottom: 3rem !important;
+}
+
+.swiper-slide {
+  width: -moz-fit-content !important;
+  width: fit-content !important;
+}
+
+@media screen and (max-width: 768px) {
+  .swiper-slide {
+    width: 100% !important;
   }
 }
+.swiper-pagination-bullet-active {
+  background-color: #fff !important;
+}
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+.swiper-pagination-bullet {
+  background-color: #fff !important;
 }
