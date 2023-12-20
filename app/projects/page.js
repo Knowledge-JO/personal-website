@@ -22,9 +22,19 @@ import {
   BiLogoReact,
   BiLogoTailwindCss,
   BiLogoTypescript,
+  BiLogoPostgresql,
 } from "react-icons/bi";
 import { ImSpinner9 } from "react-icons/im";
-import { SiFramer, SiNextdotjs, SiSolidity } from "react-icons/si";
+import {
+  SiFramer,
+  SiNextdotjs,
+  SiSolidity,
+  SiDjango,
+  SiAmazonaws,
+  SiSqlite,
+} from "react-icons/si";
+import { FaPython } from "react-icons/fa";
+import { DiDjango } from "react-icons/di";
 
 export default function Projects() {
   return (
@@ -97,9 +107,11 @@ function ProjectCard({ project, index }) {
         <p className="text-sm font-medium sm:text-lg">{description}</p>
 
         <div className="flex items-center gap-4 text-2xl">
-          <Link href={link} target="blank" rel="noopener noreferrer">
-            <BiLinkExternal />
-          </Link>
+          {link && (
+            <Link href={link} target="blank" rel="noopener noreferrer">
+              <BiLinkExternal />
+            </Link>
+          )}
           {githubLink && (
             <Link href={githubLink} target="blank" rel="noopener noreferrer">
               <BiLogoGithub />
@@ -114,6 +126,67 @@ function ProjectCard({ project, index }) {
 
 const projectsData = [
   {
+    name: "Rebirthclaimsite",
+    link: "rebirthclaimsite.com",
+    description:
+      "A claim site built with django to aid acceptance of students into rebirth classes",
+    logos: [
+      <FaPython key="python" />,
+      <SiDjango key="django" />,
+      <BiLogoHtml5 key="html" />,
+      <BiLogoCss3 key="css" />,
+      <BiLogoPostgresql key="postgres" />,
+      <SiAmazonaws key="aws" />,
+    ],
+    imageSrc: "/rebirthclaimsite.png",
+  },
+  {
+    name: "Django CRM",
+    link: "",
+    githubLink: "",
+    description: "A customer relationship manager built with django",
+    logos: [
+      <FaPython key="python" />,
+      <SiDjango key="django" />,
+      <BiLogoHtml5 key="html" />,
+      <BiLogoCss3 key="css" />,
+      <BiLogoPostgresql key="postgres" />,
+      <SiAmazonaws key="aws" />,
+    ],
+    imageSrc: "/crm.png",
+  },
+  {
+    name: "online Market place",
+    link: "https://github.com/Knowledge-JO/django-online-marketplace",
+    githubLink: "https://github.com/Knowledge-JO/django-online-marketplace",
+    description:
+      "An online market place for purchasing clothes, gadget, home appliances, etc built with django",
+    logos: [
+      <FaPython key="python" />,
+      <SiDjango key={"django"} />,
+      <BiLogoHtml5 key="html" />,
+      <BiLogoCss3 key="css" />,
+      <SiSqlite key="sqlite" />,
+    ],
+    imageSrc: "/marketplace.png",
+  },
+  {
+    name: "SentFi",
+    link: "https://senti-fi-loan.vercel.app/",
+    githubLink: "https://github.com/Knowledge-JO/sentiFiLoan",
+    description:
+      "A decentralized world of commerce where you can Buy, sell, get loans, insure your NFTs, earn and source anything safely without the risk of getting scammed. Truly secure transactions.",
+    logos: [
+      <FaPython key="python" />,
+      <SiDjango key={"django"} />,
+      <BiLogoJavascript key="js" />,
+      <BiLogoHtml5 key="html" />,
+      <BiLogoCss3 key="css" />,
+      <SiSolidity className="" key="solidity" />,
+    ],
+    imageSrc: "/sentfi.jpg",
+  },
+  {
     name: "Blockpay",
     link: "https://blockpayo.vercel.app/",
     githubLink: "https://github.com/BlockpayO/",
@@ -127,20 +200,7 @@ const projectsData = [
     ],
     imageSrc: "/blockpay.png",
   },
-  {
-    name: "SentFi",
-    link: "https://senti-fi-loan.vercel.app/",
-    githubLink: "https://github.com/Knowledge-JO/sentiFiLoan",
-    description:
-      "A decentralized world of commerce where you can Buy, sell, get loans, insure your NFTs, earn and source anything safely without the risk of getting scammed. Truly secure transactions.",
-    logos: [
-      <BiLogoJavascript key="js" />,
-      <BiLogoHtml5 key="html" />,
-      <BiLogoCss3 key="css" />,
-      <SiSolidity className="" key="solidity" />,
-    ],
-    imageSrc: "/sentfi.jpg",
-  },
+
   {
     name: "Shortly",
     link: "https://shortly-flax.vercel.app/",
