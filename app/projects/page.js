@@ -38,9 +38,10 @@ export default function Projects() {
             <Navbar />
 
             <Swiper
-              effect="coverflow"
+              effect={"coverflow"}
               grabCursor={true}
               centeredSlides={true}
+              slidesPerView={"auto"}
               coverflowEffect={{
                 rotate: 50,
                 stretch: 0,
@@ -52,8 +53,7 @@ export default function Projects() {
                 clickable: true,
                 dynamicBullets: true,
               }}
-              modules={[EffectCoverflow, Pagination, Navigation]}
-              navigation={true}
+              modules={[EffectCoverflow, Pagination]}
               spaceBetween={35}
               className="mySwiper"
             >
