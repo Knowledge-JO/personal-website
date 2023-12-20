@@ -142,8 +142,8 @@ const projectsData = [
   },
   {
     name: "Django CRM",
-    link: "",
-    githubLink: "",
+    link: "https://github.com/Knowledge-JO/djangoCRM",
+    githubLink: "https://github.com/Knowledge-JO/djangoCRM",
     description: "A customer relationship manager built with django",
     logos: [
       <FaPython key="python" />,
