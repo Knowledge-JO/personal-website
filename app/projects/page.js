@@ -99,7 +99,7 @@ function ProjectCard({ project, index }) {
           src={imageSrc}
           priority={index === 0}
           onLoad={() => setIsLoading(false)}
-          className="rounded-xl bg-black/30 grayscale-[0.7] filter transition-all hover:grayscale-0"
+          className="h-[575px] rounded-xl bg-black/30 grayscale-[0.7] filter transition-all hover:grayscale-0"
         />
       </div>
 
@@ -125,6 +125,20 @@ function ProjectCard({ project, index }) {
 }
 
 const projectsData = [
+  {
+    name: "Rebirth",
+    link: "https://t.me/redcardfestivalbot",
+    description:
+      "A telegram mini app build with NextJS and Supabase for creating, managing and sharing gifts to friends, families via telegram(groups, channel DMs) and even outside telegram.",
+    logos: [
+      <BiLogoJavascript key="js" />,
+      <BiLogoHtml5 key="html" />,
+      <BiLogoCss3 key="css" />,
+      <BiLogoTailwindCss key="tailwind" />,
+      <SiNextdotjs key="next.js" />,
+    ],
+    imageSrc: "/redcard.png",
+  },
   {
     name: "Rebirthclaimsite",
     link: "rebirthclaimsite.com",
@@ -177,8 +191,6 @@ const projectsData = [
     description:
       "A decentralized world of commerce where you can Buy, sell, get loans, insure your NFTs, earn and source anything safely without the risk of getting scammed. Truly secure transactions.",
     logos: [
-      <FaPython key="python" />,
-      <SiDjango key={"django"} />,
       <BiLogoJavascript key="js" />,
       <BiLogoHtml5 key="html" />,
       <BiLogoCss3 key="css" />,

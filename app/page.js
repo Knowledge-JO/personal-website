@@ -17,14 +17,8 @@ export default function Home() {
       if (!current) return;
       console.log(current);
       setInterval(() => {
-        current.textContent = "A frontend developer";
+        current.textContent = "A full-stack developer";
       }, 4000);
-      setInterval(() => {
-        current.textContent = "A solidity developer";
-      }, 8000);
-      setInterval(() => {
-        current.textContent = "A python developer";
-      }, 12000);
     };
     // setInterval(textLoad, 12000);
     textLoad();
