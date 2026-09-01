@@ -1,67 +1,366 @@
-@import url("https://fonts.googleapis.com/css2?family=Kaisei+Decol&display=swap");
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-.font-kaisei {
-  font-family: "Kaisei Decol", serif;
+:root {
+  --cy: 0 229 255;
+  --mg: 255 43 214;
+  --lm: 198 255 61;
 }
 
-html {
-  background-color: #000;
-}
+@layer base {
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
 
-::selection {
-  background-color: #000;
-  color: #ffffff;
-}
+  html {
+    background-color: #03040a;
+    scroll-behavior: smooth;
+  }
 
-input:-webkit-autofill,
-input:-webkit-autofill:hover,
-input:-webkit-autofill:focus,
-input:-webkit-autofill:active {
-  -webkit-box-shadow: 0 0 0 30px #212326 inset;
-  -webkit-text-fill-color: #ceced4;
-}
+  body {
+    color: #dbe4f0;
+    background-color: #03040a;
+    overflow-x: hidden;
+    font-feature-settings: "ss01", "cv01";
+  }
 
-::-webkit-scrollbar {
-  width: 5px;
-  height: 5px;
-  background: #000;
-}
+  ::selection {
+    background-color: rgb(var(--cy) / 0.3);
+    color: #ffffff;
+  }
 
-::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.147);
-  border-radius: 20px;
-}
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+    background: #05060f;
+  }
 
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.147);
-}
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(
+      180deg,
+      rgb(var(--cy) / 0.7),
+      rgb(var(--mg) / 0.7)
+    );
+    border-radius: 999px;
+  }
 
-::-webkit-scrollbar-thumb:active {
-  background: rgba(255, 255, 255, 0.147);
-}
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px #0c1020 inset;
+    -webkit-text-fill-color: #dbe4f0;
+    caret-color: #dbe4f0;
+  }
 
-.swiper {
-  padding-bottom: 3rem !important;
-}
-
-.swiper-slide {
-  width: -moz-fit-content !important;
-  width: fit-content !important;
-}
-
-@media screen and (max-width: 768px) {
-  .swiper-slide {
-    width: 100% !important;
+  :focus-visible {
+    outline: 1px solid rgb(var(--cy) / 0.9);
+    outline-offset: 3px;
   }
 }
-.swiper-pagination-bullet-active {
-  background-color: #fff !important;
+
+@layer components {
+  /* ── Chamfered "HUD panel" shapes ─────────────────────────────── */
+  .clip-hud {
+    clip-path: polygon(
+      0 14px,
+      14px 0,
+      calc(100% - 14px) 0,
+      100% 14px,
+      100% calc(100% - 14px),
+      calc(100% - 14px) 100%,
+      14px 100%,
+      0 calc(100% - 14px)
+    );
+  }
+
+  .clip-notch {
+    clip-path: polygon(
+      0 0,
+      calc(100% - 18px) 0,
+      100% 18px,
+      100% 100%,
+      18px 100%,
+      0 calc(100% - 18px)
+    );
+  }
+
+  .clip-tag {
+    clip-path: polygon(
+      8px 0,
+      100% 0,
+      100% calc(100% - 8px),
+      calc(100% - 8px) 100%,
+      0 100%,
+      0 8px
+    );
+  }
+
+  /* ── Surfaces ─────────────────────────────────────────────────── */
+  .panel {
+    position: relative;
+    background: linear-gradient(
+      145deg,
+      rgba(12, 16, 32, 0.92),
+      rgba(5, 6, 15, 0.86)
+    );
+    border: 1px solid rgba(125, 249, 255, 0.13);
+  }
+
+  .panel-hover {
+    transition:
+      border-color 0.45s ease,
+      background 0.45s ease,
+      box-shadow 0.45s ease;
+  }
+
+  .panel-hover:hover {
+    border-color: rgba(0, 229, 255, 0.45);
+    box-shadow:
+      0 0 0 1px rgba(0, 229, 255, 0.12),
+      0 22px 60px -28px rgba(0, 229, 255, 0.5);
+  }
+
+  /* ── Text effects ─────────────────────────────────────────────── */
+  .text-glow-cyan {
+    text-shadow:
+      0 0 6px rgb(var(--cy) / 0.55),
+      0 0 26px rgb(var(--cy) / 0.3);
+  }
+
+  .text-glow-magenta {
+    text-shadow:
+      0 0 6px rgb(var(--mg) / 0.55),
+      0 0 26px rgb(var(--mg) / 0.3);
+  }
+
+  .text-chrome {
+    background: linear-gradient(
+      180deg,
+      #ffffff 0%,
+      #cfe9f5 38%,
+      #7fa8bd 62%,
+      #ffffff 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .text-stroke {
+    -webkit-text-stroke: 1px rgba(125, 249, 255, 0.35);
+    color: transparent;
+  }
+
+  .hud-label {
+    font-family: var(--font-mono), monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: rgb(var(--cy) / 0.75);
+  }
+
+  /* ── Backdrops ────────────────────────────────────────────────── */
+  .grid-floor {
+    background-image:
+      linear-gradient(rgba(0, 229, 255, 0.07) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 229, 255, 0.07) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+
+  .grid-fine {
+    background-image:
+      linear-gradient(rgba(125, 249, 255, 0.045) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(125, 249, 255, 0.045) 1px, transparent 1px);
+    background-size: 22px 22px;
+  }
+
+  .noise-layer {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+  }
+
+  .scanlines {
+    background-image: repeating-linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0.028) 0px,
+      rgba(255, 255, 255, 0.028) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+  }
+
+  /* ── Divider ──────────────────────────────────────────────────── */
+  .rule-neon {
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgb(var(--cy) / 0.55),
+      rgb(var(--mg) / 0.35),
+      transparent
+    );
+  }
+
+  /* ── Corner brackets ──────────────────────────────────────────── */
+  .brackets::before,
+  .brackets::after {
+    content: "";
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    border-color: rgb(var(--cy) / 0.7);
+    transition: border-color 0.4s ease;
+  }
+
+  .brackets::before {
+    top: -1px;
+    left: -1px;
+    border-top: 1px solid;
+    border-left: 1px solid;
+  }
+
+  .brackets::after {
+    bottom: -1px;
+    right: -1px;
+    border-bottom: 1px solid;
+    border-right: 1px solid;
+  }
+
+  /* ── Buttons ──────────────────────────────────────────────────── */
+  .btn-neon {
+    position: relative;
+    overflow: hidden;
+    font-family: var(--font-mono), monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    font-size: 0.68rem;
+    border: 1px solid rgb(var(--cy) / 0.4);
+    background: rgb(var(--cy) / 0.06);
+    color: #d8fbff;
+    transition:
+      background 0.35s ease,
+      border-color 0.35s ease,
+      box-shadow 0.35s ease,
+      color 0.35s ease;
+  }
+
+  .btn-neon:hover {
+    background: rgb(var(--cy) / 0.16);
+    border-color: rgb(var(--cy) / 0.9);
+    color: #ffffff;
+    box-shadow: 0 0 30px -8px rgb(var(--cy) / 0.75);
+  }
+
+  .btn-neon::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      100deg,
+      transparent,
+      rgba(255, 255, 255, 0.22),
+      transparent
+    );
+    transform: translateX(-130%);
+    transition: transform 0.7s ease;
+  }
+
+  .btn-neon:hover::after {
+    transform: translateX(130%);
+  }
+
+  .btn-ghost {
+    font-family: var(--font-mono), monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    font-size: 0.68rem;
+    border: 1px solid rgba(125, 249, 255, 0.16);
+    color: #8fa3bd;
+    transition:
+      color 0.35s ease,
+      border-color 0.35s ease;
+  }
+
+  .btn-ghost:hover {
+    color: #ffe9fb;
+    border-color: rgb(var(--mg) / 0.7);
+  }
+
+  /* ── Chip ─────────────────────────────────────────────────────── */
+  .chip {
+    font-family: var(--font-mono), monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 0.28rem 0.55rem;
+    border: 1px solid rgba(125, 249, 255, 0.16);
+    background: rgba(125, 249, 255, 0.04);
+    color: #9fb4cc;
+    transition:
+      color 0.3s ease,
+      border-color 0.3s ease,
+      background 0.3s ease;
+  }
+
+  .group:hover .chip {
+    color: #cdefff;
+    border-color: rgba(0, 229, 255, 0.35);
+    background: rgba(0, 229, 255, 0.08);
+  }
+
+  /* ── Boot overlay failsafe ────────────────────────────────────── */
+  /*
+   * The boot overlay covers the whole viewport and is present in the
+   * server-rendered HTML, so if hydration never happens the site would be a
+   * black screen. This clears it on a CSS timer independently of React; when
+   * JS is healthy the component unmounts first and this never fires.
+   */
+  @keyframes boot-failsafe {
+    0%,
+    88% {
+      opacity: 1;
+      visibility: visible;
+    }
+    100% {
+      opacity: 0;
+      visibility: hidden;
+    }
+  }
+
+  .boot-failsafe {
+    animation: boot-failsafe 3.6s ease-in forwards;
+  }
+
+  .mask-fade-x {
+    -webkit-mask-image: linear-gradient(
+      90deg,
+      transparent,
+      #000 12%,
+      #000 88%,
+      transparent
+    );
+    mask-image: linear-gradient(
+      90deg,
+      transparent,
+      #000 12%,
+      #000 88%,
+      transparent
+    );
+  }
 }
 
-.swiper-pagination-bullet {
-  background-color: #fff !important;
+/* ── Reduced motion ─────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
 }

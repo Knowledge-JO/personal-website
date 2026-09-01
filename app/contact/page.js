@@ -1,22 +1,15 @@
-"use client";
-import { motion, AnimatePresence } from "framer-motion";
-import { fadeInAnimation } from "@/utils/framerAnimOptions";
-import { Contact, Navbar } from "@/components";
+import { Contact } from "@/components";
+
+export const metadata = {
+  title: "Contact",
+  description:
+    "Get in touch with Knowledge Okhakumhe — AI infrastructure and backend engineer, open to remote or on-site roles in the US, UK, Germany, UAE and Australia.",
+};
 
 export default function Page() {
   return (
-    <>
-      <AnimatePresence mode="wait">
-        <motion.main
-          className="container mx-auto flex min-h-screen items-center justify-center text-white"
-          {...fadeInAnimation}
-        >
-          <motion.div className="page-content" {...fadeInAnimation}>
-            <Navbar />
-            <Contact />
-          </motion.div>
-        </motion.main>
-      </AnimatePresence>
-    </>
+    <main>
+      <Contact />
+    </main>
   );
 }

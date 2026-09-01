@@ -1,240 +1,79 @@
-"use client";
 import Link from "next/link";
-import Image from "next/image";
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { ProjectDossier, Reveal, SectionHeader } from "@/components";
+import { accentMap, projects } from "@/data/projects";
 
-import { Navbar } from "@/components";
-import { fadeInAnimation } from "@/utils/framerAnimOptions";
-
-import "swiper/css";
-import "swiper/css/pagination";
-import "swiper/css/effect-coverflow";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { EffectCoverflow, Navigation, Pagination } from "swiper/modules";
-
-import {
-  BiLinkExternal,
-  BiLogoCss3,
-  BiLogoGithub,
-  BiLogoHtml5,
-  BiLogoJavascript,
-  BiLogoReact,
-  BiLogoTailwindCss,
-  BiLogoTypescript,
-  BiLogoPostgresql,
-} from "react-icons/bi";
-import { ImSpinner9 } from "react-icons/im";
-import {
-  SiFramer,
-  SiNextdotjs,
-  SiSolidity,
-  SiDjango,
-  SiAmazonaws,
-  SiSqlite,
-} from "react-icons/si";
-import { FaPython } from "react-icons/fa";
-import { DiDjango } from "react-icons/di";
+export const metadata = {
+  title: "Selected Work",
+  description:
+    "AI infrastructure and production systems by Knowledge Okhakumhe — a WhatsApp-native agentic commerce platform, a dual-boundary MCP server, a voice-first companion API, and supporting backends.",
+};
 
 export default function Projects() {
   return (
-    <>
-      <AnimatePresence mode="wait">
-        <motion.main
-          className="mx-auto flex min-h-screen items-center justify-center text-white"
-          {...fadeInAnimation}
+    <main className="mx-auto max-w-7xl px-5 pb-28 pt-32 sm:px-8 lg:pt-40">
+      <SectionHeader
+        id="//"
+        eyebrow="project manifest"
+        title="Selected work"
+        lede="Nine systems, AI infrastructure first. Team work is labelled. Metrics are counted from source — endpoints, tools, tables — not lines of code."
+      />
+
+      {/* Manifest index */}
+      <Reveal delay={0.2}>
+        <nav
+          aria-label="Project index"
+          className="mt-14 grid gap-px border border-white/[0.06] sm:grid-cols-2 lg:grid-cols-3"
         >
-          <motion.div className="page-content" {...fadeInAnimation}>
-            <Navbar />
+          {projects.map((project) => {
+            const accent = accentMap[project.accent];
 
-            <Swiper
-              effect={"coverflow"}
-              grabCursor={true}
-              centeredSlides={true}
-              slidesPerView={"auto"}
-              coverflowEffect={{
-                rotate: 50,
-                stretch: 0,
-                depth: 100,
-                modifier: 1,
-                slideShadows: true,
-              }}
-              pagination={{
-                clickable: true,
-                dynamicBullets: true,
-              }}
-              modules={[EffectCoverflow, Pagination]}
-              spaceBetween={35}
-              className="mySwiper"
-            >
-              {projectsData.map((project, index) => (
-                <SwiperSlide key={index}>
-                  <ProjectCard project={project} index={index} />
-                </SwiperSlide>
-              ))}
-            </Swiper>
-          </motion.div>
-        </motion.main>
-      </AnimatePresence>
-    </>
-  );
-}
+            return (
+              <Link
+                key={project.id}
+                href={`#${project.id}`}
+                className="group flex items-center gap-4 bg-void-900/70 px-5 py-4 transition-colors duration-400 hover:bg-void-800/80"
+              >
+                <span className="font-mono text-[0.6rem] tracking-[0.24em] text-slate-600">
+                  {project.index}
+                </span>
+                <span
+                  className={`h-1.5 w-1.5 shrink-0 rotate-45 ${accent.bg} opacity-50 transition-opacity duration-400 group-hover:opacity-100`}
+                />
+                <span className="min-w-0 flex-1">
+                  <span className="block truncate font-display text-[0.8rem] font-bold uppercase tracking-wider text-slate-200 transition-colors group-hover:text-white">
+                    {project.name}
+                  </span>
+                  <span className="mt-1 block truncate font-mono text-[0.58rem] uppercase tracking-[0.14em] text-slate-600">
+                    {project.domain}
+                  </span>
+                </span>
+              </Link>
+            );
+          })}
+        </nav>
+      </Reveal>
 
-function ProjectCard({ project, index }) {
-  const { name, link, githubLink, description, logos, imageSrc } = project;
-  const [isLoading, setIsLoading] = useState(true);
-
-  return (
-    <div className="relative">
-      <div className="cursor-alias">
-        {isLoading && (
-          <div className="absolute left-0 top-0 z-10 flex h-full w-full items-center justify-center">
-            <ImSpinner9 className="animate-spin text-4xl" />
-          </div>
-        )}
-        <Image
-          alt={`${name} screenshot`}
-          width={575}
-          height={575}
-          src={imageSrc}
-          priority={index === 0}
-          onLoad={() => setIsLoading(false)}
-          className="h-[575px] rounded-xl bg-black/30 grayscale-[0.7] filter transition-all hover:grayscale-0"
-        />
+      <div className="mt-16 grid gap-7">
+        {projects.map((project, i) => (
+          <Reveal key={project.id} delay={0.04} y={36}>
+            <ProjectDossier project={project} defaultOpen={i === 0} />
+          </Reveal>
+        ))}
       </div>
 
-      <div className="absolute bottom-0 left-0 flex w-full flex-col items-center justify-center gap-2 rounded-xl bg-black/60 py-4 text-center">
-        <p className="text-sm font-medium sm:text-lg">{description}</p>
-
-        <div className="flex items-center gap-4 text-2xl">
-          {link && (
-            <Link href={link} target="blank" rel="noopener noreferrer">
-              <BiLinkExternal />
-            </Link>
-          )}
-          {githubLink && (
-            <Link href={githubLink} target="blank" rel="noopener noreferrer">
-              <BiLogoGithub />
-            </Link>
-          )}
-          {logos}
+      <Reveal>
+        <div className="mt-20 flex flex-col items-center gap-6 text-center">
+          <div className="rule-neon w-full max-w-sm" />
+          <p className="max-w-xl text-sm leading-relaxed text-slate-400">
+            Several of these systems are private client or commercial
+            repositories, so source access is available on request during a
+            technical conversation.
+          </p>
+          <Link href="/contact" className="btn-neon clip-tag px-8 py-4">
+            Request a walkthrough
+          </Link>
         </div>
-      </div>
-    </div>
+      </Reveal>
+    </main>
   );
 }
-
-const projectsData = [
-  {
-    name: "Rebirth",
-    link: "https://t.me/redcardfestivalbot",
-    description:
-      "A telegram mini app build with NextJS and Supabase for creating, managing and sharing gifts to friends, families via telegram(groups, channel DMs) and even outside telegram.",
-    logos: [
-      <BiLogoJavascript key="js" />,
-      <BiLogoHtml5 key="html" />,
-      <BiLogoCss3 key="css" />,
-      <BiLogoTailwindCss key="tailwind" />,
-      <SiNextdotjs key="next.js" />,
-    ],
-    imageSrc: "/redcard.png",
-  },
-  {
-    name: "Rebirthclaimsite",
-    link: "rebirthclaimsite.com",
-    description:
-      "A claim site built with django to aid acceptance of students into rebirth classes",
-    logos: [
-      <FaPython key="python" />,
-      <SiDjango key="django" />,
-      <BiLogoHtml5 key="html" />,
-      <BiLogoCss3 key="css" />,
-      <BiLogoPostgresql key="postgres" />,
-      <SiAmazonaws key="aws" />,
-    ],
-    imageSrc: "/rebirthclaimsite.png",
-  },
-  {
-    name: "Django CRM",
-    link: "https://github.com/Knowledge-JO/djangoCRM",
-    githubLink: "https://github.com/Knowledge-JO/djangoCRM",
-    description: "A customer relationship manager built with django",
-    logos: [
-      <FaPython key="python" />,
-      <SiDjango key="django" />,
-      <BiLogoHtml5 key="html" />,
-      <BiLogoCss3 key="css" />,
-      <BiLogoPostgresql key="postgres" />,
-      <SiAmazonaws key="aws" />,
-    ],
-    imageSrc: "/crm.png",
-  },
-  {
-    name: "online Market place",
-    link: "https://github.com/Knowledge-JO/django-online-marketplace",
-    githubLink: "https://github.com/Knowledge-JO/django-online-marketplace",
-    description:
-      "An online market place for purchasing clothes, gadget, home appliances, etc built with django",
-    logos: [
-      <FaPython key="python" />,
-      <SiDjango key={"django"} />,
-      <BiLogoHtml5 key="html" />,
-      <BiLogoCss3 key="css" />,
-      <SiSqlite key="sqlite" />,
-    ],
-    imageSrc: "/marketplace.png",
-  },
-  {
-    name: "SentFi",
-    link: "https://senti-fi-loan.vercel.app/",
-    githubLink: "https://github.com/Knowledge-JO/sentiFiLoan",
-    description:
-      "A decentralized world of commerce where you can Buy, sell, get loans, insure your NFTs, earn and source anything safely without the risk of getting scammed. Truly secure transactions.",
-    logos: [
-      <BiLogoJavascript key="js" />,
-      <BiLogoHtml5 key="html" />,
-      <BiLogoCss3 key="css" />,
-      <SiSolidity className="" key="solidity" />,
-    ],
-    imageSrc: "/sentfi.jpg",
-  },
-  {
-    name: "Blockpay",
-    link: "https://blockpayo.vercel.app/",
-    githubLink: "https://github.com/BlockpayO/",
-    description: "A decentralized payment and personal subscription manager",
-    logos: [
-      <SiNextdotjs className="text-xl" key="next.js" />,
-      <BiLogoJavascript key="javascript" />,
-      <BiLogoTailwindCss key="tailwind" />,
-      <SiFramer className="text-lg" key="framer" />,
-      <SiSolidity className="" key="solidity" />,
-    ],
-    imageSrc: "/blockpay.png",
-  },
-
-  {
-    name: "Shortly",
-    link: "https://shortly-flax.vercel.app/",
-    description:
-      "URL shortner website with real time insights into how your links are performing",
-    logos: [
-      <BiLogoReact key="react" />,
-      <BiLogoJavascript key="js" />,
-      <BiLogoTailwindCss key="tailwind" />,
-    ],
-    imageSrc: "/shortly.png",
-  },
-  {
-    name: "Starbasev3",
-    link: "https://starbasev3.vercel.app/",
-    description:
-      "Starbasev3 is a deployer for ERC20 tokens. The deployer works with Ethereum, Binance, and Arbitrium blockchain.",
-    logos: [
-      <BiLogoReact key="react" />,
-      <BiLogoJavascript key="js" />,
-      <BiLogoTailwindCss key="tailwind" />,
-    ],
-    imageSrc: "/starbase.png",
-  },
-];
