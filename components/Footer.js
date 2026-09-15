@@ -30,7 +30,7 @@ export const Footer = () => (
         <span>© {new Date().getFullYear()} {profile.name.toUpperCase()}</span>
         <span className="flex items-center gap-2">
           <span className="h-1.5 w-1.5 animate-pulse-glow rounded-full bg-neon-lime" />
-          Open to remote · US · UK · DE · AE · AU
+          Open to remote · Worldwide
         </span>
         <span>Built with Next.js · Deployed on Vercel</span>
       </div>

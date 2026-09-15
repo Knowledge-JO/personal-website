@@ -45,7 +45,7 @@ export const Hero = () => {
         >
           <span className="flex items-center gap-2 font-mono text-[0.62rem] uppercase tracking-[0.28em] text-neon-lime/80">
             <span className="h-1.5 w-1.5 animate-pulse-glow rounded-full bg-neon-lime" />
-            Available for remote · US · UK · DE · AE · AU
+            Available for remote · Worldwide
           </span>
           <span className="hidden h-[1px] w-10 bg-white/15 sm:block" />
           <span className="font-mono text-[0.62rem] uppercase tracking-[0.24em] text-slate-500">

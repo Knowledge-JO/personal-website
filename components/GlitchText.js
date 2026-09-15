@@ -5,13 +5,8 @@ import { useReducedMotion } from "framer-motion";
  * Chromatic-aberration glitch. Two clipped, colour-shifted copies of the text
  * jitter behind the real one; the real one stays legible at all times.
  */
-export const GlitchText = ({ text, className = "", intensity = "normal" }) => {
+export const GlitchText = ({ text, className = "" }) => {
   const reduce = useReducedMotion();
-
-  const layers =
-    intensity === "loud"
-      ? ["animate-glitch-a", "animate-glitch-b"]
-      : ["animate-glitch-a", "animate-glitch-b"];
 
   return (
     <span className={`relative inline-block ${className}`}>
@@ -19,14 +14,14 @@ export const GlitchText = ({ text, className = "", intensity = "normal" }) => {
         <>
           <span
             aria-hidden="true"
-            className={`absolute inset-0 select-none text-neon-cyan/60 mix-blend-screen ${layers[0]}`}
+            className="absolute inset-0 select-none text-neon-cyan/60 mix-blend-screen animate-glitch-a"
             style={{ clipPath: "polygon(0 0, 100% 0, 100% 46%, 0 46%)" }}
           >
             {text}
           </span>
           <span
             aria-hidden="true"
-            className={`absolute inset-0 select-none text-neon-magenta/60 mix-blend-screen ${layers[1]}`}
+            className="absolute inset-0 select-none text-neon-magenta/60 mix-blend-screen animate-glitch-b"
             style={{ clipPath: "polygon(0 54%, 100% 54%, 100% 100%, 0 100%)" }}
           >
             {text}

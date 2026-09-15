@@ -9,6 +9,14 @@ const randomChar = () => CHARS[Math.floor(Math.random() * CHARS.length)];
 /**
  * Decrypt-on-reveal text. Characters resolve left to right while the
  * unresolved tail keeps cycling, so the layout never shifts.
+ *
+ * The cycling frames are written directly to the text node: every heading on
+ * the site uses this, and a state update every 32ms per instance re-rendered
+ * the whole header subtree ~30 times a second each.
+ *
+ * The scrambled span is hidden from assistive tech and the real string is
+ * exposed alongside it — otherwise screen readers announce random glyphs for
+ * every section heading, and the accessible name changes on every tick.
  */
 export const ScrambleText = ({
   text,
@@ -20,51 +28,54 @@ export const ScrambleText = ({
 }) => {
   const reduce = useReducedMotion();
   const ref = useRef(null);
+  const outRef = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-15% 0px" });
-  const [output, setOutput] = useState(reduce ? text : "");
 
   const active = reduce ? false : trigger === "mount" || inView;
 
   useEffect(() => {
-    if (!active || reduce) {
-      if (reduce) setOutput(text);
+    const node = outRef.current;
+    if (!node) return;
+
+    if (reduce) {
+      node.textContent = text;
       return;
     }
 
+    if (!active) return;
+
+    const chars = Array.from(text);
+    const buffer = chars.slice();
     let revealed = 0;
-    let frame;
     let interval;
 
-    const run = () => {
+    const timer = setTimeout(() => {
       interval = setInterval(() => {
-        revealed = Math.min(text.length, revealed + charsPerTick);
+        revealed = Math.min(chars.length, revealed + charsPerTick);
 
-        const next = text
-          .split("")
-          .map((char, i) => {
-            if (i < revealed) return char;
-            if (char === " ") return " ";
-            return randomChar();
-          })
-          .join("");
+        for (let i = 0; i < chars.length; i += 1) {
+          if (i < revealed || chars[i] === " ") buffer[i] = chars[i];
+          else buffer[i] = randomChar();
+        }
 
-        setOutput(next);
+        node.textContent = buffer.join("");
 
-        if (revealed >= text.length) clearInterval(interval);
+        if (revealed >= chars.length) clearInterval(interval);
       }, tickMs);
-    };
-
-    frame = setTimeout(run, delay);
+    }, delay);
 
     return () => {
-      clearTimeout(frame);
+      clearTimeout(timer);
       clearInterval(interval);
     };
   }, [active, reduce, text, tickMs, charsPerTick, delay]);
 
   return (
     <span ref={ref} className={className}>
-      {output || (reduce ? text : "\u00A0")}
+      <span ref={outRef} aria-hidden="true" suppressHydrationWarning>
+        {reduce ? text : " "}
+      </span>
+      <span className="sr-only">{text}</span>
     </span>
   );
 };

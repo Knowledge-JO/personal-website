@@ -68,7 +68,7 @@ export const Contact = () => {
             Whether you have a role in mind — AI platform, backend, or
             full-stack — or an agent integration you want built with real
             permission boundaries, I&apos;d like to hear about it. Remote or
-            on-site in the US, UK, Germany, UAE and Australia.
+            on-site, worldwide.
           </p>
         </Reveal>
 
@@ -93,7 +93,7 @@ export const Contact = () => {
               <p className="hud-label">Status</p>
               <p className="mt-2 flex items-center gap-2.5 font-mono text-sm tracking-wide text-slate-200">
                 <span className="h-1.5 w-1.5 animate-pulse-glow rounded-full bg-neon-lime" />
-                Open to remote · US · UK · DE · AE · AU
+                Open to remote · Worldwide
               </p>
             </div>
           </div>

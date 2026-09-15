@@ -10,7 +10,7 @@ export const profile = {
   ],
   tagline:
     "I build the systems language models sit on — tool surfaces with real permission boundaries, retrieval that does not leak tenants, and metering that treats tokens as a cost centre.",
-  location: "Remote · open to US, UK, Germany, UAE, Australia",
+  location: "Remote · open worldwide",
   email: "megamindtheincredible@gmail.com",
   socials: {
     github: "https://github.com/Knowledge-JO",
@@ -20,7 +20,7 @@ export const profile = {
   bio: [
     "I'm a TypeScript engineer specialising in AI infrastructure: Model Context Protocol servers, retrieval-augmented memory, prompt compilation, and the auth boundaries that keep an agent from becoming a superuser. I have shipped production systems both as sole engineer and as a named owner on small teams, spanning NestJS backends, Next.js dashboards, and a React Native app.",
     "The work I am proudest of is giving a language model real write access that is still provably scoped. For a WhatsApp-native commerce platform I built a dual-endpoint MCP server with twenty tools across two trust boundaries, RAG on pgvector with HNSW indexing, Anthropic prompt caching with per-tenant data excluded from the cached prefix, and per-feature token metering.",
-    "The same instinct shows up off the model path. I work server-first on the frontend — React Server Components and Server Actions, so credentials stay in HTTP-only cookies — and I treat webhooks, queues and ledgers as systems that must survive retries, not happy-path demos. I am looking for backend and AI-platform roles at companies in the US, UK, Germany, UAE and Australia, remote or on-site.",
+    "The same instinct shows up off the model path. I work server-first on the frontend — React Server Components and Server Actions, so credentials stay in HTTP-only cookies — and I treat webhooks, queues and ledgers as systems that must survive retries, not happy-path demos. I am looking for backend and AI-platform roles worldwide, remote or on-site.",
   ],
   stats: [
     { value: 7, suffix: "", label: "Production systems", sub: "solo and team" },

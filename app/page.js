@@ -260,8 +260,7 @@ export default function Home() {
 
               <p className="mx-auto mt-6 max-w-xl text-sm leading-relaxed text-slate-400">
                 Open to backend, AI-platform and full-stack roles — remote or
-                on-site in the US, UK, Germany, UAE and Australia. I read
-                everything that comes through.
+                on-site, worldwide. I read everything that comes through.
               </p>
 
               <div className="mt-10 flex flex-wrap items-center justify-center gap-4">

@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { languages } from "../utils/languages";
 
@@ -14,11 +14,35 @@ const bootLines = [
 
 const TOTAL_MS = 2200;
 
+/** Own component so its 180ms interval only re-renders this one node. */
+const Greeting = () => {
+  const [index, setIndex] = useState(0);
+
+  useEffect(() => {
+    const id = setInterval(
+      () => setIndex((i) => (i + 1) % languages.length),
+      180
+    );
+    return () => clearInterval(id);
+  }, []);
+
+  return (
+    <motion.span
+      key={index}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className="font-mono text-[0.65rem] tracking-[0.2em] text-slate-500"
+    >
+      {languages[index]}
+    </motion.span>
+  );
+};
+
 export const Preloader = ({ onSetIsLoading }) => {
   const reduce = useReducedMotion();
-  const [progress, setProgress] = useState(0);
+  const pctRef = useRef(null);
+  const barRef = useRef(null);
   const [lineCount, setLineCount] = useState(0);
-  const [greetIndex, setGreetIndex] = useState(0);
 
   useEffect(() => {
     if (reduce) {
@@ -28,27 +52,42 @@ export const Preloader = ({ onSetIsLoading }) => {
 
     const start = performance.now();
     let raf;
+    let lastPct = -1;
+    let lastLines = -1;
 
     const tick = (now) => {
       const t = Math.min(1, (now - start) / TOTAL_MS);
       const eased = 1 - Math.pow(1 - t, 2.2);
-      setProgress(Math.round(eased * 100));
-      setLineCount(Math.ceil(eased * bootLines.length));
+      const pct = Math.round(eased * 100);
+
+      // Written straight to the DOM: this runs during hydration and the hero's
+      // entrance animation, where a React render per frame is the worst thing
+      // we could be doing.
+      if (pct !== lastPct) {
+        lastPct = pct;
+        if (pctRef.current) {
+          pctRef.current.textContent = String(pct).padStart(3, "0");
+        }
+        if (barRef.current) {
+          barRef.current.style.transform = `scaleX(${pct / 100})`;
+        }
+      }
+
+      const lines = Math.ceil(eased * bootLines.length);
+      if (lines !== lastLines) {
+        lastLines = lines;
+        setLineCount(lines);
+      }
+
       if (t < 1) raf = requestAnimationFrame(tick);
     };
 
     raf = requestAnimationFrame(tick);
 
-    const greetId = setInterval(
-      () => setGreetIndex((i) => (i + 1) % languages.length),
-      180
-    );
-
     const done = setTimeout(() => onSetIsLoading(false), TOTAL_MS + 280);
 
     return () => {
       cancelAnimationFrame(raf);
-      clearInterval(greetId);
       clearTimeout(done);
     };
   }, [onSetIsLoading, reduce]);
@@ -67,25 +106,25 @@ export const Preloader = ({ onSetIsLoading }) => {
       <div className="relative w-full max-w-md px-8">
         <div className="mb-8 flex items-baseline justify-between">
           <span className="hud-label">system boot</span>
-          <motion.span
-            key={greetIndex}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="font-mono text-[0.65rem] tracking-[0.2em] text-slate-500"
-          >
-            {languages[greetIndex]}
-          </motion.span>
+          <Greeting />
         </div>
 
         <div className="mb-8 font-display text-6xl font-black tabular-nums text-white sm:text-7xl">
-          {String(progress).padStart(3, "0")}
+          <span ref={pctRef} suppressHydrationWarning>
+            000
+          </span>
           <span className="ml-2 text-lg text-neon-cyan/70">%</span>
         </div>
 
         <div className="relative mb-8 h-[3px] w-full overflow-hidden bg-white/[0.08]">
+          {/*
+            scaleX rather than width: a linear gradient renders identically
+            either way, and this keeps the bar off the layout path.
+          */}
           <div
-            className="h-full bg-gradient-to-r from-neon-cyan via-neon-violet to-neon-magenta transition-[width] duration-100 ease-out"
-            style={{ width: `${progress}%` }}
+            ref={barRef}
+            className="h-full w-full origin-left bg-gradient-to-r from-neon-cyan via-neon-violet to-neon-magenta transition-transform duration-100 ease-out will-change-transform"
+            style={{ transform: "scaleX(0)" }}
           />
           <div className="absolute inset-0 animate-sweep bg-gradient-to-r from-transparent via-white/50 to-transparent" />
         </div>

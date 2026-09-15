@@ -245,6 +245,7 @@ export const ProjectDossier = ({ project, defaultOpen = false }) => {
                 alt={`${project.name} interface`}
                 width={512}
                 height={320}
+                sizes="(min-width: 1024px) 256px, 100vw"
                 className="h-40 w-full object-cover opacity-50 saturate-50 transition-all duration-700 group-hover:opacity-90 group-hover:saturate-100 lg:h-36"
               />
               <div
@@ -338,10 +339,10 @@ export const ProjectDossier = ({ project, defaultOpen = false }) => {
                         initial={{ opacity: 0, y: 14 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.06 * i, duration: 0.5, ease: EASE }}
-                        className="relative bg-void-900/70 p-5 transition-colors duration-400 hover:bg-void-800/80"
+                        className="group/hl relative bg-void-900/70 p-5 transition-colors duration-400 hover:bg-void-800/80"
                       >
                         <span
-                          className={`absolute left-0 top-0 h-full w-[1px] ${a.bg} opacity-0 transition-opacity duration-400 hover:opacity-70`}
+                          className={`absolute left-0 top-0 h-full w-[1px] ${a.bg} opacity-0 transition-opacity duration-400 group-hover/hl:opacity-70`}
                         />
                         <div className="flex items-baseline gap-2.5">
                           <span className="font-mono text-[0.58rem] tracking-[0.2em] text-slate-600">

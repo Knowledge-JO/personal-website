@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import { HiMenuAlt4, HiX } from "react-icons/hi";
+import { lockScroll } from "@/utils/scrollLock";
 
 const links = [
   { id: "01", label: "Index", href: "/" },
@@ -18,22 +19,39 @@ export const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
 
+  // Close the menu on navigation. Adjusting during render rather than from an
+  // effect avoids committing a frame with the overlay still up.
+  const [lastPath, setLastPath] = useState(pathname);
+  if (lastPath !== pathname) {
+    setLastPath(pathname);
+    setOpen(false);
+  }
+
+  // Coalesced to one read per frame: the handler fires on every scroll event
+  // otherwise, and reading scrollY there competes with the compositor.
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24);
-    onScroll();
+    let raf = 0;
+
+    const update = () => {
+      raf = 0;
+      setScrolled(window.scrollY > 24);
+    };
+
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(update);
+    };
+
+    update();
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      if (raf) cancelAnimationFrame(raf);
+    };
   }, []);
 
   useEffect(() => {
-    setOpen(false);
-  }, [pathname]);
-
-  useEffect(() => {
-    document.body.style.overflow = open ? "hidden" : "";
-    return () => {
-      document.body.style.overflow = "";
-    };
+    if (!open) return;
+    return lockScroll();
   }, [open]);
 
   return (
@@ -70,9 +88,7 @@ export const Navbar = () => {
 
           <div className="hidden items-center gap-9 md:flex">
             {links.map((link) => {
-              const active =
-                link.href === pathname ||
-                (link.href === "/projects" && pathname === "/projects");
+              const active = link.href === pathname;
 
               return (
                 <Link

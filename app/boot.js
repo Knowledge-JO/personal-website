@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence } from "framer-motion";
 import { Preloader } from "@/components";
+import { lockScroll } from "@/utils/scrollLock";
 
 const SESSION_KEY = "kjo:booted";
 
@@ -20,6 +21,9 @@ export function BootSequence() {
       sessionStorage.getItem(SESSION_KEY) ||
       document.visibilityState !== "visible"
     ) {
+      // Genuinely browser-only state that has to agree with the server render,
+      // so it can only be resolved after hydration.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setLoading(false);
       return;
     }
@@ -28,10 +32,7 @@ export function BootSequence() {
 
   useEffect(() => {
     if (!loading) return;
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.body.style.overflow = "";
-    };
+    return lockScroll();
   }, [loading]);
 
   return (

@@ -1,12 +1,6 @@
 "use client";
-import { useEffect, useState } from "react";
-import {
-  motion,
-  useMotionTemplate,
-  useMotionValue,
-  useReducedMotion,
-  useSpring,
-} from "framer-motion";
+import { useEffect, useSyncExternalStore } from "react";
+import { motion, useMotionValue, useReducedMotion, useSpring } from "framer-motion";
 
 /**
  * Full-viewport CRT treatment: static scanlines, film grain, a slow sweeping
@@ -25,7 +19,7 @@ export const CrtOverlay = () => {
       <div className="noise-layer absolute inset-0 opacity-[0.035] mix-blend-overlay" />
 
       {!reduce && (
-        <div className="absolute inset-x-0 top-0 h-[38vh] animate-scanline bg-gradient-to-b from-transparent via-neon-cyan/[0.045] to-transparent" />
+        <div className="animate-scanline absolute inset-x-0 top-0 h-[38vh] bg-gradient-to-b from-transparent via-neon-cyan/[0.045] to-transparent" />
       )}
 
       <div
@@ -39,25 +33,41 @@ export const CrtOverlay = () => {
   );
 };
 
+/* The gradient is a 420px-radius circle, so a 840px box reproduces it exactly. */
+const GLOW = 840;
+
+/* Pointer capability is read through the store API rather than set from an
+ * effect, which used to cost every visitor an extra render of this subtree. */
+const subscribePointer = () => () => {};
+const hasFinePointer = () =>
+  window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+const noFinePointerOnServer = () => false;
+
 /**
  * A neon glow that trails the pointer. Desktop-only — it never mounts on
  * touch devices, where it would just be a stuck blob.
+ *
+ * The glow is a fixed-size layer moved with a transform rather than a
+ * viewport-sized layer whose `background` gradient is recomputed per frame.
+ * Repainting a full-screen gradient on every pointer frame was the single
+ * most expensive thing on the page; a transform is a compositor-only change.
  */
 export const CursorGlow = () => {
   const reduce = useReducedMotion();
-  const [enabled, setEnabled] = useState(false);
+  const finePointer = useSyncExternalStore(
+    subscribePointer,
+    hasFinePointer,
+    noFinePointerOnServer
+  );
+  const enabled = !reduce && finePointer;
 
-  const x = useMotionValue(-500);
-  const y = useMotionValue(-500);
+  const x = useMotionValue(-GLOW);
+  const y = useMotionValue(-GLOW);
   const sx = useSpring(x, { stiffness: 120, damping: 22, mass: 0.4 });
   const sy = useSpring(y, { stiffness: 120, damping: 22, mass: 0.4 });
-  const background = useMotionTemplate`radial-gradient(420px circle at ${sx}px ${sy}px, rgba(0,229,255,0.09), rgba(157,92,255,0.05) 40%, transparent 68%)`;
 
   useEffect(() => {
-    if (reduce) return;
-    if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
-
-    setEnabled(true);
+    if (!enabled) return;
 
     const onMove = (e) => {
       x.set(e.clientX);
@@ -66,18 +76,48 @@ export const CursorGlow = () => {
 
     window.addEventListener("pointermove", onMove, { passive: true });
     return () => window.removeEventListener("pointermove", onMove);
-  }, [reduce, x, y]);
+  }, [enabled, x, y]);
 
   if (!enabled) return null;
 
   return (
-    <motion.div
+    <div
       aria-hidden="true"
-      className="pointer-events-none fixed inset-0 z-[55]"
-      style={{ background }}
-    />
+      className="pointer-events-none fixed inset-0 z-[55] overflow-hidden"
+    >
+      <motion.div
+        className="absolute will-change-transform"
+        style={{
+          x: sx,
+          y: sy,
+          left: -GLOW / 2,
+          top: -GLOW / 2,
+          width: GLOW,
+          height: GLOW,
+          background:
+            "radial-gradient(420px circle at center, rgba(0,229,255,0.09), rgba(157,92,255,0.05) 40%, transparent 68%)",
+        }}
+      />
+    </div>
   );
 };
+
+/**
+ * One breathing colour bloom.
+ *
+ * The blur lives on a static inner element so the browser rasterises it once;
+ * the animated wrapper only changes transform and opacity, which the
+ * compositor handles without re-running a 130px gaussian blur every frame.
+ */
+const Bloom = ({ className, blob, animate, duration, reduce }) => (
+  <motion.div
+    className={`absolute will-change-transform ${className}`}
+    animate={reduce ? undefined : animate}
+    transition={{ duration, repeat: Infinity, ease: "easeInOut" }}
+  >
+    <div className={`h-full w-full rounded-full ${blob}`} />
+  </motion.div>
+);
 
 /**
  * Layered ambient backdrop: fine grid, drifting perspective floor and two
@@ -110,20 +150,26 @@ export const Backdrop = () => {
       </div>
 
       {/* Colour blooms */}
-      <motion.div
-        className="absolute -left-40 top-[-10%] h-[46rem] w-[46rem] rounded-full bg-neon-cyan/[0.07] blur-[130px]"
-        animate={reduce ? {} : { scale: [1, 1.12, 1], opacity: [0.55, 1, 0.55] }}
-        transition={{ duration: 13, repeat: Infinity, ease: "easeInOut" }}
+      <Bloom
+        reduce={reduce}
+        className="-left-40 top-[-10%] h-[46rem] w-[46rem]"
+        blob="bg-neon-cyan/[0.07] blur-[130px]"
+        animate={{ scale: [1, 1.12, 1], opacity: [0.55, 1, 0.55] }}
+        duration={13}
       />
-      <motion.div
-        className="absolute -right-40 top-[34%] h-[40rem] w-[40rem] rounded-full bg-neon-magenta/[0.06] blur-[130px]"
-        animate={reduce ? {} : { scale: [1.1, 1, 1.1], opacity: [0.4, 0.9, 0.4] }}
-        transition={{ duration: 16, repeat: Infinity, ease: "easeInOut" }}
+      <Bloom
+        reduce={reduce}
+        className="-right-40 top-[34%] h-[40rem] w-[40rem]"
+        blob="bg-neon-magenta/[0.06] blur-[130px]"
+        animate={{ scale: [1.1, 1, 1.1], opacity: [0.4, 0.9, 0.4] }}
+        duration={16}
       />
-      <motion.div
-        className="absolute bottom-[-15%] left-1/3 h-[34rem] w-[34rem] rounded-full bg-neon-violet/[0.05] blur-[140px]"
-        animate={reduce ? {} : { scale: [1, 1.18, 1] }}
-        transition={{ duration: 19, repeat: Infinity, ease: "easeInOut" }}
+      <Bloom
+        reduce={reduce}
+        className="bottom-[-15%] left-1/3 h-[34rem] w-[34rem]"
+        blob="bg-neon-violet/[0.05] blur-[140px]"
+        animate={{ scale: [1, 1.18, 1] }}
+        duration={19}
       />
     </div>
   );

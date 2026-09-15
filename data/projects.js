@@ -1,8 +1,8 @@
 export const projects = [
   {
-    id: "grapeshop",
+    id: "amani",
     index: "01",
-    name: "GrapeShop",
+    name: "AMANI",
     subtitle: "WhatsApp-native AI commerce platform",
     kind: "Full product suite — 6 repositories",
     role: "Sole engineer",
@@ -81,9 +81,9 @@ export const projects = [
   },
 
   {
-    id: "grapeshop-mcp",
+    id: "amani-mcp",
     index: "02",
-    name: "GrapeShop MCP Server",
+    name: "AMANI MCP Server",
     subtitle: "Agent tool layer with two auth boundaries",
     kind: "AI infrastructure",
     role: "Sole engineer",

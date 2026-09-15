@@ -11,7 +11,7 @@ export const TechMarquee = ({ reverse = false }) => {
       <div className="mask-fade-x flex overflow-hidden">
         <div
           className={`flex w-max shrink-0 items-center gap-10 ${
-            reduce ? "" : "animate-marquee"
+            reduce ? "" : "animate-marquee will-change-transform"
           }`}
           style={reverse ? { animationDirection: "reverse" } : undefined}
         >
